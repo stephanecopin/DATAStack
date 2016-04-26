@@ -11,13 +11,10 @@ import TestCheck
 @objc public class DATAStack: NSObject {
     // MARK: - Variables
 
-    private var storeType: DATAStackStoreType = .SQLite
-
+    private var storeType: DATAStackStoreType
     private var storeName: String?
-
-    private var modelName: String = ""
-
-    private var modelBundle: NSBundle = NSBundle.mainBundle()
+    private var modelName: String
+    private var modelBundle: NSBundle
 
     private var _mainContext: NSManagedObjectContext?
 
@@ -152,13 +149,12 @@ import TestCheck
         return persistentStoreCoordinator
         }()
 
-    // MARK: - Initalizers
+    // MARK: - Initializers
 
-    public override init() {
+    public convenience override init() {
         let bundle = NSBundle.mainBundle()
         let bundleName = bundle.infoDictionary!["CFBundleName"] as! String
-
-        self.modelName = bundleName
+        self.init(modelName: bundleName)
     }
 
     public init(modelName: String, bundle: NSBundle = NSBundle.mainBundle(), storeType: DATAStackStoreType = .SQLite, storeName: String? = nil) {
