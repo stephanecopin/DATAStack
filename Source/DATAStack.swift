@@ -15,6 +15,7 @@ import TestCheck
     private var storeName: String?
     private var modelName: String
     private var modelBundle: NSBundle
+    private var directoryURL: NSURL
 
     private var _mainContext: NSManagedObjectContext?
 
@@ -72,7 +73,7 @@ import TestCheck
 
                     break
                 case .SQLite:
-                    let storeURL = self.applicationDocumentsDirectory().URLByAppendingPathComponent(filePath)
+                    let storeURL = self.directoryURL.URLByAppendingPathComponent(filePath)
                     guard let storePath = storeURL.path else { fatalError("Store path not found: \(storeURL)") }
 
                     let shouldPreloadDatabase = !NSFileManager.defaultManager().fileExistsAtPath(storePath)
@@ -157,11 +158,12 @@ import TestCheck
         self.init(modelName: bundleName)
     }
 
-    public init(modelName: String, bundle: NSBundle = NSBundle.mainBundle(), storeType: DATAStackStoreType = .SQLite, storeName: String? = nil) {
+    public init(modelName: String, bundle: NSBundle = NSBundle.mainBundle(), storeType: DATAStackStoreType = .SQLite, storeName: String? = nil, directoryURL: NSURL = DATAStack.applicationDocumentsDirectory()) {
         self.modelName = modelName
         self.modelBundle = bundle
         self.storeType = storeType
         self.storeName = storeName
+        self.directoryURL = directoryURL
     }
 
     deinit {
@@ -273,7 +275,7 @@ import TestCheck
         }
     }
 
-    private func applicationDocumentsDirectory() -> NSURL {
+    private static func applicationDocumentsDirectory() -> NSURL {
         #if os(tvOS)
             return NSFileManager.defaultManager().URLsForDirectory(.CachesDirectory, inDomains: .UserDomainMask).last!
         #else
